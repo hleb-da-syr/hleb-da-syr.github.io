@@ -50,6 +50,8 @@ h1,h2,h3,p,ol{margin:0}h1,h2,h3{font-family:var(--serif);line-height:1.1}svg{wid
 /* Режим «только меню»: корзина выключена (см. ORDERING в скрипте) */
 .no-order .cartbar,.no-order .sheet,.no-order .order-only{display:none!important}
 html:not(.no-order) .menu-only{display:none!important}
+.hero-actions .btn-ghost{background:#201610a6;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+@media(max-width:520px){.hero-actions{flex-wrap:nowrap;gap:10px;width:calc(100vw - 32px)}.hero-actions .btn{padding:10px 14px;white-space:nowrap}}
 .menu-only{max-width:560px}
 </style></head>
 <body id="top">
@@ -73,10 +75,10 @@ html:not(.no-order) .menu-only{display:none!important}
 <p class="tagline">Румяный хлеб, нежные сыры и свежая молочка</p>
 <span class="gold-rule" aria-hidden="true"></span>
 <p class="lead">Домашнее приготовление по семейному рецепту</p>
-<div class="hero-actions"><a href="#catalog" class="btn btn-butter">Смотреть меню <svg aria-hidden="true"><use href="#i-down"/></svg></a></div>
+<div class="hero-actions"><a href="#catalog" class="btn btn-butter">Смотреть меню <svg aria-hidden="true"><use href="#i-down"/></svg></a><a href="#contacts" class="btn btn-ghost"><svg aria-hidden="true"><use href="#i-phone"/></svg>Заказать</a></div>
 </div></div></section>
 <main>
-<div id="catalog" class="catalog-head wrap"><h2>Меню и цены</h2><p class="date">Цены актуальны на <time datetime="2026-10-10">10.10.2026</time></p></div>
+<div id="catalog" class="catalog-head wrap"><h2>Меню и цены</h2><p class="date">Цены актуальны на <time id="price-date" datetime="2026-11-08">08.11.2026</time></p></div>
 <nav class="tabs" aria-label="Разделы меню"><div class="wrap" id="tabs"></div></nav>
 <div class="wrap" id="menu"></div>
 <noscript><p class="wrap">Включите JavaScript, чтобы открыть меню с ценами и собрать заказ.</p></noscript>
@@ -122,6 +124,22 @@ html:not(.no-order) .menu-only{display:none!important}
 <div class="toast" id="toast" role="status" hidden></div>
 
 <script>
+/* ====== ДАТА «Цены актуальны на» ======
+   Всегда показывает сегодняшнюю дату по Москве, меняется в 00:00 МСК
+   (даже если страница открыта). */
+(function(){
+  const el = document.getElementById("price-date"); if (!el) return;
+  const MSK = 3 * 3600000, DAY = 86400000;
+  const show = () => {
+    const d = new Date(Date.now() + MSK); // московское время через UTC-поля
+    const dd = String(d.getUTCDate()).padStart(2,"0"), mm = String(d.getUTCMonth()+1).padStart(2,"0"), yy = d.getUTCFullYear();
+    el.textContent = dd + "." + mm + "." + yy;
+    el.setAttribute("datetime", yy + "-" + mm + "-" + dd);
+    setTimeout(show, DAY - ((Date.now() + MSK) % DAY) + 1000);
+  };
+  show();
+})();
+
 /* ====== КОРЗИНА ======
    false — сайт работает как меню для ознакомления (без «+» и корзины).
    true  — вернуть кнопки «+», корзину и окно «Мой заказ». */
