@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#271d17"><title>Хлеб да сыр — меню и цены</title>
-<meta name="description" content="Меню домашней пекарни и сыроварни «Хлеб да сыр»: хлеб, сыры и молочные продукты с ценами. Соберите список заказа.">
+<meta name="description" content="Меню домашней пекарни и сыроварни «Хлеб да сыр»: хлеб, сыры и молочные продукты с ценами. Заказ по телефону или в Telegram.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&amp;family=Nunito:wght@400;600;700;800&amp;display=swap">
 <style>:root{--bg:#271d17;--deep:#201610;--surface:#33261e;--cream:#fbf3e6;--gold:#edb94e;--muted:#d0bdab;--edge:#574334;--paper:#e8d5b8;--serif:Lora,Georgia,"Times New Roman",serif;--sans:Nunito,"Trebuchet MS",system-ui,sans-serif;color-scheme:dark}
@@ -46,6 +46,11 @@ h1,h2,h3,p,ol{margin:0}h1,h2,h3{font-family:var(--serif);line-height:1.1}svg{wid
 .contact-person::before,.contact-person::after{content:"";width:21px;height:1px;background:#9a7750}
 @container(min-width:490px){.contact-methods{grid-template-columns:max-content auto max-content;align-items:center;gap:9px}.contact-person::before,.contact-person::after{display:none}}
 .panel .order-contacts{margin-top:2px}.panel #copy-order{justify-self:start}
+
+/* Режим «только меню»: корзина выключена (см. ORDERING в скрипте) */
+.no-order .cartbar,.no-order .sheet,.no-order .order-only{display:none!important}
+html:not(.no-order) .menu-only{display:none!important}
+.menu-only{max-width:560px}
 </style></head>
 <body id="top">
 <a class="skip" href="#catalog">Перейти к меню</a>
@@ -87,7 +92,8 @@ h1,h2,h3,p,ol{margin:0}h1,h2,h3{font-family:var(--serif);line-height:1.1}svg{wid
     <span><span class="contact-action">Написать в Telegram</span><strong>@ivlevatigra</strong></span>
   </a>
 </div></div></div>
-<ol><li>Добавьте товары кнопкой «+». Хлеб считаем поштучно, сыры и молочные продукты — по 100 г.</li>
+<p class="menu-only">Выберите в меню, что нравится, и позвоните Татьяне или напишите ей в Telegram, чтобы договориться о заказе, времени и месте.</p>
+<ol class="order-only"><li>Добавьте товары кнопкой «+». Хлеб считаем поштучно, сыры и молочные продукты — по 100 г.</li>
 <li>Откройте «Мой заказ» и скопируйте список.</li><li>Позвоните Татьяне или отправьте ей список в Telegram, чтобы договориться о времени и месте.</li></ol>
 </div></section></main>
 <footer class="footer"><div class="wrap"><span>Хлеб да сыр</span><a href="#top">Наверх ↑</a></div></footer>
@@ -116,6 +122,12 @@ h1,h2,h3,p,ol{margin:0}h1,h2,h3{font-family:var(--serif);line-height:1.1}svg{wid
 <div class="toast" id="toast" role="status" hidden></div>
 
 <script>
+/* ====== КОРЗИНА ======
+   false — сайт работает как меню для ознакомления (без «+» и корзины).
+   true  — вернуть кнопки «+», корзину и окно «Мой заказ». */
+const ORDERING = false;
+if (!ORDERING) document.documentElement.classList.add("no-order");
+
 /* ====== ПРАЙС (цены на 10.10.2026) ======
    price: число в рублях или null, если «цена по запросу».
    per: "шт" или "100 г". photo: иллюстрация товара. */
@@ -181,7 +193,7 @@ const MENU = [
       el.className = "item";
       el.innerHTML = '<div class="pic">'+pic+'</div><div class="info"><div class="item-meta"><h3 class="name">'+it.n+'</h3>'+
         (it.note?'<p class="note">'+it.note+'</p>':'')+'</div>'+
-        '<div class="row">'+price+'<div class="qty" data-key="'+key+'"><button class="minus" type="button" aria-label="Убрать: '+it.n+'">−</button><output></output><button class="plus" type="button" aria-label="Добавить: '+it.n+'">+</button></div></div></div>';
+        '<div class="row">'+price+(ORDERING ? '<div class="qty" data-key="'+key+'"><button class="minus" type="button" aria-label="Убрать: '+it.n+'">−</button><output></output><button class="plus" type="button" aria-label="Добавить: '+it.n+'">+</button></div>' : '')+'</div></div>';
       grid.appendChild(el);
     });
     menu.appendChild(sec);
@@ -197,6 +209,7 @@ const MENU = [
   });
 
   function sync(){
+    if (!ORDERING) return;
     document.querySelectorAll(".qty").forEach(q => {
       const k = q.dataset.key, n = cart[k] || 0;
       q.classList.toggle("empty", !n);
