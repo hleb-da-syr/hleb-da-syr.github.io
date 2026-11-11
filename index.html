@@ -186,12 +186,13 @@ if (!ORDERING) document.documentElement.classList.add("no-order");
 
 /* ====== ПРАЙС (цены на 10.10.2026) ======
    price: число в рублях или null, если «цена по запросу».
-   per: "шт" или "100 г". photo: иллюстрация товара. */
+   per: "шт" или "100 г". photo: иллюстрация товара.
+   hidden:true — товар временно скрыт с сайта; чтобы вернуть, удалите hidden:true. */
 const MENU = [
   { id:"bread", cls:"bread", title:"Хлеб", sub:"Цена за штуку", items:[
     { n:"Батон сливочный", price:90, per:"шт", photo:"img/baton.webp" },
     { n:"Бородинский", price:145, per:"шт", photo:"img/borodinsky.webp" },
-    { n:"Полюшка", note:"ржано-пшеничный с семечками", price:175, per:"шт", photo:"img/polushka.webp" },
+    { n:"Тартин", note:"ржано-пшеничный с семечками", price:175, per:"шт", photo:"img/polushka.webp" },
     { n:"Кирпичик", price:140, per:"шт", photo:"img/kirpichik.webp" },
     { n:"Французская булка", price:200, per:"шт", photo:"img/french.webp" },
     { n:"Тыквенный тартин", price:230, per:"шт", photo:"img/tartin.webp" },
@@ -204,9 +205,9 @@ const MENU = [
     { n:"Кесо Бланко", note:"с цедрой цитруса", price:150, per:"100 г", photo:"img/queso-blanco.webp" },
     { n:"Маскарпоне", price:280, per:"100 г", photo:"img/mascarpone.webp" },
     { n:"Страчателла", price:260, per:"100 г", photo:"img/stracciatella.webp" },
-    { n:"Альметте", price:null, per:"100 г", photo:"img/almette.webp" },
-    { n:"Халуми", price:null, per:"100 г", photo:"img/halloumi.webp" },
-    { n:"Брынза", price:null, per:"100 г", photo:"img/brynza.webp" }
+    { n:"Альметте", hidden:true, price:null, per:"100 г", photo:"img/almette.webp" },
+    { n:"Халуми", hidden:true, price:null, per:"100 г", photo:"img/halloumi.webp" },
+    { n:"Брынза", hidden:true, price:null, per:"100 г", photo:"img/brynza.webp" }
   ], foot:"* Какие добавки есть сейчас, уточняйте при заказе." },
   { id:"dairy", cls:"dairy", title:"Молочные продукты", sub:"Цена за 100 г", items:[
     { n:"Кефир", price:30, per:"100 г", photo:"img/kefir.webp" },
@@ -240,6 +241,7 @@ const MENU = [
       (cat.foot ? '<p class="foot-note">'+cat.foot+'</p>' : '');
     const grid = sec.querySelector(".grid");
     cat.items.forEach((it, i) => {
+      if (it.hidden) return; // временно скрытые товары (см. hidden:true в MENU)
       const key = cat.id + "-" + i; all[key] = it;
       const pic = '<img src="'+it.photo+'" alt="" loading="lazy" decoding="async" width="444" height="444">';
       const price = it.price == null
