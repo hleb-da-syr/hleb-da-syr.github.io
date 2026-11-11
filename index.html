@@ -49,7 +49,7 @@ h1,h2,h3,p,ol{margin:0}h1,h2,h3{font-family:var(--serif);line-height:1.1}svg{wid
 .contact-person{display:flex;align-items:center;justify-content:center;gap:9px;font:600 17px/1.15 var(--serif)}
 .contact-person::before,.contact-person::after{content:"";width:21px;height:1px;background:#9a7750}
 .contact-person{order:-1}
-@container(min-width:620px){.contact-methods{grid-template-columns:repeat(2,minmax(0,1fr));max-width:none}.contact-person{grid-column:1/-1;justify-content:flex-start}.contact-person::before{display:none}.contact-method strong{font-size:15px}}
+@container(min-width:620px){.contact-methods{grid-template-columns:repeat(3,minmax(0,1fr));max-width:none}.contact-person,.contact-lead,.contact-call{grid-column:1/-1}.contact-call{justify-self:center;min-width:300px}.contact-method strong{font-size:15px}}
 .contact-whatsapp{background:#2b4635;border-color:#6f9a7c}
 .contact-whatsapp:hover{background:#33523e}
 .contact-whatsapp .contact-icon{background:#a6d3b2;color:#1f3a2a;box-shadow:inset 0 0 0 1px #e2c795}
@@ -65,9 +65,23 @@ h1,h2,h3,p,ol{margin:0}h1,h2,h3{font-family:var(--serif);line-height:1.1}svg{wid
 /* Режим «только меню»: корзина выключена (см. ORDERING в скрипте) */
 .no-order .cartbar,.no-order .sheet,.no-order .order-only{display:none!important}
 html:not(.no-order) .menu-only{display:none!important}
-.hero-actions .btn-ghost{background:#201610a6;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 @media(max-width:520px){.hero-actions{flex-wrap:nowrap;gap:10px;width:calc(100vw - 32px)}.hero-actions .btn{padding:10px 14px;white-space:nowrap}}
 .menu-only{max-width:560px}
+/* Фраза между звонком и мессенджерами */
+.contact-lead{margin:10px auto 12px;max-width:34ch;text-align:center;font:600 clamp(19px,2.3vw,25px)/1.4 var(--serif);color:var(--cream);text-wrap:balance;letter-spacing:-.01em}
+.contact-lead span{color:var(--gold)}
+/* В режиме «только меню» блок контактов по центру */
+.no-order .how .wrap{grid-template-columns:1fr;justify-items:center}
+.no-order .how .wrap>div{width:min(100%,820px)}
+.no-order .how h2{text-align:center;margin-bottom:6px}
+/* Дата цен в шапке и большая кнопка «Заказать» */
+.hero-date{margin:0;color:#e6d7c3;font-size:14px;line-height:1.3}
+.hero-date time{color:var(--gold);font-weight:800}
+.catalog-head{align-items:center}
+.btn-order{min-height:56px;padding:12px 30px;font-size:18px;border-radius:12px;background:transparent;color:var(--cream);border:2px solid var(--gold);transition:background .2s,color .2s}
+.btn-order svg{width:20px;height:20px}
+.btn-order:hover,.btn-order:focus-visible{background:var(--gold);color:#2b1e12}
+@media(max-width:520px){.hero-date{font-size:12.5px}.catalog-head .btn-order{margin-top:14px;min-height:52px;font-size:17px}}
 </style></head>
 <body id="top">
 <a class="skip" href="#catalog">Перейти к меню</a>
@@ -92,10 +106,10 @@ html:not(.no-order) .menu-only{display:none!important}
 <p class="tagline">Румяный хлеб, нежные сыры и свежая молочка</p>
 <span class="gold-rule" aria-hidden="true"></span>
 <p class="lead">Домашнее приготовление по семейному рецепту</p>
-<div class="hero-actions"><a href="#catalog" class="btn btn-butter">Смотреть меню <svg aria-hidden="true"><use href="#i-down"/></svg></a><a href="#contacts" class="btn btn-ghost"><svg aria-hidden="true"><use href="#i-phone"/></svg>Заказать</a></div>
+<div class="hero-actions"><a href="#catalog" class="btn btn-butter">Смотреть меню <svg aria-hidden="true"><use href="#i-down"/></svg></a><p class="hero-date">Цены актуальны<br>на <time id="price-date" datetime="2026-11-11">11.11.2026</time></p></div>
 </div></div></section>
 <main>
-<div id="catalog" class="catalog-head wrap"><h2>Меню и цены</h2><p class="date">Цены актуальны на <time id="price-date" datetime="2026-11-08">08.11.2026</time></p></div>
+<div id="catalog" class="catalog-head wrap"><h2>Меню и цены</h2><a href="#contacts" class="btn btn-order"><svg aria-hidden="true"><use href="#i-phone"/></svg>Заказать</a></div>
 <nav class="tabs" aria-label="Разделы меню"><div class="wrap" id="tabs"></div></nav>
 <div class="wrap" id="menu"></div>
 <noscript><p class="wrap">Включите JavaScript, чтобы открыть меню с ценами и собрать заказ.</p></noscript>
@@ -106,6 +120,7 @@ html:not(.no-order) .menu-only{display:none!important}
     <span><span class="contact-action">Позвонить</span><strong>+7 (918) 557-31-80</strong></span>
   </a>
   <span class="contact-person">Татьяна</span>
+  <p class="contact-lead">Выберите в меню, что нравится, и позвоните <span>Татьяне</span> или напишите ей в Telegram, WhatsApp или Max, чтобы договориться о заказе, времени и месте.</p>
   <a class="contact-method contact-telegram" href="https://t.me/ivlevablago" target="_blank" rel="noopener noreferrer">
     <span class="contact-icon"><svg aria-hidden="true"><use href="#i-telegram"/></svg></span>
     <span><span class="contact-action">Написать в Telegram</span><strong>@ivlevablago</strong></span>
@@ -119,7 +134,6 @@ html:not(.no-order) .menu-only{display:none!important}
     <span><span class="contact-action">Написать в Max</span><strong>Татьяна Ивлева</strong></span>
   </a>
 </div></div></div>
-<p class="menu-only">Выберите в меню, что нравится, и позвоните Татьяне или напишите ей в Telegram, WhatsApp или Max, чтобы договориться о заказе, времени и месте.</p>
 <ol class="order-only"><li>Добавьте товары кнопкой «+». Хлеб считаем поштучно, сыры и молочные продукты — по 100 г.</li>
 <li>Откройте «Мой заказ» и скопируйте список.</li><li>Позвоните Татьяне или отправьте ей список в Telegram, WhatsApp или Max, чтобы договориться о времени и месте.</li></ol>
 </div></section></main>
@@ -289,7 +303,7 @@ const MENU = [
   }
 
   // Те же контакты доступны и при просмотре заказа.
-  $(".order-contacts").append($(".contact-box .contact-methods").cloneNode(true));
+  const cm = $(".contact-box .contact-methods").cloneNode(true); cm.querySelectorAll(".contact-lead").forEach(e => e.remove()); $(".order-contacts").append(cm);
 
   // Окно заказа
   const sheet = $("#sheet");
